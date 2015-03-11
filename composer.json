@@ -29,7 +29,7 @@
         "illuminate/support": "5.0.*",
         "illuminate/validation": "5.0.*",
         "illuminate/view": "5.0.*",
-        "cartalyst/sentry": "~3.0",
+        "cartalyst/sentry": "master",
         "graham-campbell/core": "~2.0",
         "graham-campbell/binput": "~3.0",
         "graham-campbell/throttle": "~3.0",
