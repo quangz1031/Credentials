@@ -17,6 +17,7 @@ use GrahamCampbell\Credentials\Facades\UserRepository;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -44,6 +45,18 @@ class AccountController extends AbstractController
         ]);
 
         parent::__construct();
+    }
+
+    /**
+     * send users to the profile page
+     * @return mixed
+     */
+    public function getHome()
+    {
+        Session::flash('', ''); // work around laravel bug if there is no session yet
+        Session::reflash();
+
+        return Redirect::route('account.profile');
     }
 
     /**

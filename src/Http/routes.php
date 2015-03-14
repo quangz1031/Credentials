@@ -14,12 +14,14 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
 // send users to the profile page
-$router->get('account', ['as' => 'account', function () {
+/*$router->get('account', ['as' => 'account', function () {
     Session::flash('', ''); // work around laravel bug if there is no session yet
     Session::reflash();
 
     return Redirect::route('account.profile');
-}]);
+}]);*/
+$router->get('account', ['as' => 'account', 'uses' => 'AccountController@getHome']);
+
 
 // account routes
 $router->get('account/history', ['as' => 'account.history', 'uses' => 'AccountController@getHistory']);
