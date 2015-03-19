@@ -98,14 +98,14 @@ class LoginController extends AbstractController
             Credentials::authenticate($input, $remember);
         } catch (WrongPasswordException $e) {
             return Redirect::route('account.login')->withInput()->withErrors($val->errors())
-                ->with('error', 'Your password was incorrect.');
+                ->with('error', trans('validation.login.password_incorrect'));
         } catch (UserNotFoundException $e) {
             return Redirect::route('account.login')->withInput()->withErrors($val->errors())
-                ->with('error', 'That user does not exist.');
+                ->with('error', trans('validation.login.user_not_exists'));
         } catch (UserNotActivatedException $e) {
             if (Config::get('credentials::activation')) {
                 return Redirect::route('account.login')->withInput()->withErrors($val->errors())
-                ->with('error', 'You have not yet activated this account.');
+                    ->with('error', trans('validation.login.account_not_activated'));
             } else {
                 $throttle->user->attemptActivation($throttle->user->getActivationCode());
                 $throttle->user->addGroup(Credentials::getGroupProvider()->findByName('Users'));
@@ -116,10 +116,10 @@ class LoginController extends AbstractController
             $time = $throttle->getSuspensionTime();
 
             return Redirect::route('account.login')->withInput()->withErrors($val->errors())
-                ->with('error', "Your account has been suspended for $time minutes.");
+                ->with('error', trans('validation.login.account_suspended',['time' => $time]));
         } catch (UserBannedException $e) {
             return Redirect::route('account.login')->withInput()->withErrors($val->errors())
-                ->with('error', 'You have been banned. Please contact support.');
+                ->with('error', trans('validation.login.account_banned'));
         }
 
         return Redirect::intended(Config::get('core.home', '/'));
