@@ -18,6 +18,7 @@ use GrahamCampbell\Credentials\Facades\Credentials;
 use GrahamCampbell\Credentials\Facades\RevisionRepository;
 use GrahamCampbell\Credentials\Models\Relations\RevisionableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Config;
 use McCool\LaravelAutoPresenter\HasPresenter;
 
 /**
@@ -114,7 +115,7 @@ class User extends SentryUser implements HasPresenter
      */
     public function revisions()
     {
-        return $this->hasMany('GrahamCampbell\Credentials\Models\Revision');
+        return $this->hasMany(Config::get('credentials.revision'));
     }
 
     /**

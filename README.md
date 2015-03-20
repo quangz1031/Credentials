@@ -1,7 +1,7 @@
 Laravel Credentials
 ===================
 
-Laravel Credentials was created by, and is maintained by [Graham Campbell](https://github.com/GrahamCampbell), and is a cool way to authenticate in [Laravel 5](http://laravel.com). It utilises many of my packages and Cartalyst's [Sentry](https://github.com/cartalyst/sentry) package. Feel free to check out the [change log](CHANGELOG.md), [releases](https://github.com/BootstrapCMS/Credentials/releases), [license](LICENSE), [api docs](http://docs.grahamjcampbell.co.uk), and [contribution guidelines](CONTRIBUTING.md).
+Laravel Credentials was created by, and is maintained by [Graham Campbell](https://github.com/GrahamCampbell), and is a cool way to authenticate in [Laravel 5](http://laravel.com). It utilises many of my packages and Cartalyst's [Sentry](https://github.com/BootstrapCMS/Sentry) package. Feel free to check out the [change log](CHANGELOG.md), [releases](https://github.com/BootstrapCMS/Credentials/releases), [license](LICENSE), [api docs](http://docs.grahamjcampbell.co.uk), and [contribution guidelines](CONTRIBUTING.md).
 
 ![Laravel Credentials](https://cloud.githubusercontent.com/assets/2829600/4432313/c1664f5c-468c-11e4-8469-c6874c21aede.PNG)
 
@@ -22,6 +22,19 @@ To get the latest version of Laravel Credentials, simply add the following line 
 
 ```
 "graham-campbell/credentials": "0.4.*"
+```
+
+You'll also need to make sure our fork of Sentry is included in your repositories list:
+
+```json
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/BootstrapCMS/Sentry"
+        }
+    ],
+}
 ```
 
 You'll then need to run `composer install` or `composer update` to download it and have the autoloader updated.
