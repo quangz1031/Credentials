@@ -81,7 +81,7 @@ class ActivationController extends AbstractController
 
             $user->addGroup(Credentials::getGroupProvider()->findByName('Users'));
 
-            return Redirect::route('account.login')
+            return Redirect::to(Config::get('core.activate_redirect_url', '/'))
                 ->with('success', 'Your account has been activated successfully. You may now login.');
         } catch (UserNotFoundException $e) {
             return Redirect::to(Config::get('core.home', '/'))
