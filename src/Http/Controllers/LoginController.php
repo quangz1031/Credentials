@@ -104,7 +104,7 @@ class LoginController extends AbstractController
                 ->with('error', trans('validation.login.user_not_exists'));
         } catch (UserNotActivatedException $e) {
             if (Config::get('credentials.activation')) {
-                return Redirect::route('account.login')->withInput()->withErrors($val->errors())
+                return Redirect::route(Config::get('core.login_not_activated_redirect_url','account.login'))->withInput()->withErrors($val->errors())
                     ->with('error', trans('validation.login.account_not_activated'));
             } else {
                 $throttle->user->attemptActivation($throttle->user->getActivationCode());
