@@ -111,7 +111,7 @@ class RegistrationController extends AbstractController
                 'url'     => URL::to(Config::get('core.home', '/')),
                 'link'    => URL::route('account.activate', ['id' => $user->id, 'code' => $code]),
                 'email'   => $user->getLogin(),
-                'subject' => Config::get('core.name').' - Welcome',
+                'subject' => Config::get('core.subject_registered',Config::get('core.name').' - Welcome'),
             ];
 
             Mail::queue('credentials::emails.welcome', $mail, function ($message) use ($mail) {

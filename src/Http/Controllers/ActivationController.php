@@ -137,7 +137,7 @@ class ActivationController extends AbstractController
                 'url'     => URL::to(Config::get('core.home', '/')),
                 'link'    => URL::route('account.activate', ['id' => $user->id, 'code' => $code]),
                 'email'   => $user->getLogin(),
-                'subject' => Config::get('core.name').' - Activation',
+                'subject' => Config::get('core.subject_resend_activation',Config::get('core.name').' - Activation'),
             ];
 
             Mail::queue('credentials::emails.resend', $mail, function ($message) use ($mail) {
