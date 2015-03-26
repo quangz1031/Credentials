@@ -37,10 +37,10 @@ class AccountController extends AbstractController
     public function __construct()
     {
         $this->setPermissions([
-            'getHistory'    => 'user',
-            'getProfile'    => 'user',
+            'getHistory' => 'user',
+            'getProfile' => 'user',
             'deleteProfile' => 'user',
-            'patchDetails'  => 'user',
+            'patchDetails' => 'user',
             'patchPassword' => 'user',
         ]);
 
@@ -101,9 +101,9 @@ class AccountController extends AbstractController
         }
 
         $mail = [
-            'url'     => URL::to(Config::get('core.home', '/')),
-            'email'   => $email,
-            'subject' => Config::get('core.name').' - Account Deleted Notification',
+            'url' => URL::to(Config::get('core.home', '/')),
+            'email' => $email,
+            'subject' => Config::get('core.name') . ' - Account Deleted Notification',
         ];
 
         Mail::queue('credentials::emails.userdeleted', $mail, function ($message) use ($mail) {
@@ -137,10 +137,10 @@ class AccountController extends AbstractController
 
         if ($email !== $input['email']) {
             $mail = [
-                'old'     => $email,
-                'new'     => $input['email'],
-                'url'     => URL::to(Config::get('core.home', '/')),
-                'subject' => Config::get('core.name').' - New Email Information',
+                'old' => $email,
+                'new' => $input['email'],
+                'url' => URL::to(Config::get('core.home', '/')),
+                'subject' => Config::get('core.name') . ' - New Email Information',
             ];
 
             Mail::queue('credentials::emails.newemail', $mail, function ($message) use ($mail) {
@@ -163,11 +163,11 @@ class AccountController extends AbstractController
      */
     public function patchPassword()
     {
-        $input = Binput::only(['oldPassword', 'password', 'password_confirmation']);
+        $input = Binput::only(['password', 'password_confirmation']);
 
         $val = UserRepository::validate($input, array_keys($input));
         if ($val->fails()) {
-            return Redirect::route('account.profile')->withInput()->withErrors($val->errors());
+            return redirect(Config::get('core.password_change_url'))->withInput()->withErrors($val->errors());
         }
 
         unset($input['password_confirmation']);
@@ -175,20 +175,22 @@ class AccountController extends AbstractController
         $user = Credentials::getUser();
         $this->checkUser($user);
 
-        $mail = [
-            'url'     => URL::to(Config::get('core.home', '/')),
-            'email'   => $user->getLogin(),
-            'subject' => Config::get('core.name').' - New Password Notification',
-        ];
+        if (Config::get('core.send_password_change_email', false)) {
+            $mail = [
+                'url' => URL::to(Config::get('core.home', '/')),
+                'email' => $user->getLogin(),
+                'subject' => Config::get('core.name') . ' - New Password Notification',
+            ];
 
-        Mail::queue('credentials::emails.newpass', $mail, function ($message) use ($mail) {
-            $message->to($mail['email'])->subject($mail['subject']);
-        });
+            Mail::queue('credentials::emails.newpass', $mail, function ($message) use ($mail) {
+                $message->to($mail['email'])->subject($mail['subject']);
+            });
+        }
 
         $user->update($input);
 
-        return Redirect::route('account.profile')
-            ->with('success', 'Your password has been updated successfully.');
+        return redirect(Config::get('core.password_changed_redirect_url'))
+            ->with('success', trans('info.passwordChangedOK'));
     }
 
     /**
