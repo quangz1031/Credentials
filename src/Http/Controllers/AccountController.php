@@ -163,7 +163,7 @@ class AccountController extends AbstractController
      */
     public function patchPassword()
     {
-        $input = Binput::only(['password', 'password_confirmation']);
+        $input = Binput::only(['oldPassword', 'password', 'password_confirmation']);
 
         $val = UserRepository::validate($input, array_keys($input));
         if ($val->fails()) {

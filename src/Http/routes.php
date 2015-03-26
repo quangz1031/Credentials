@@ -24,10 +24,10 @@ $router->get('account', ['as' => 'account', 'uses' => 'AccountController@getHome
 
 
 // account routes
-$router->get('account/history', ['as' => 'account.history', 'uses' => 'AccountController@getHistory']);
+/*$router->get('account/history', ['as' => 'account.history', 'uses' => 'AccountController@getHistory']);
 $router->get('account/profile', ['as' => 'account.profile', 'uses' => 'AccountController@getProfile']);
 $router->delete('account/profile', ['as' => 'account.profile.delete', 'uses' => 'AccountController@deleteProfile']);
-$router->patch('account/details', ['as' => 'account.details.patch', 'uses' => 'AccountController@patchDetails']);
+$router->patch('account/details', ['as' => 'account.details.patch', 'uses' => 'AccountController@patchDetails']);*/
 $router->patch('account/password', ['as' => 'account.password.patch', 'uses' => 'AccountController@patchPassword']);
 
 // registration routes
