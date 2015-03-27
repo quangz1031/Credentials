@@ -76,7 +76,7 @@ abstract class AbstractAuth implements Middleware
             }
 
             return Redirect::guest(URL::route('account.login'))
-                ->with('error', 'You must be logged in to perform that action.');
+                ->with('error', trans('info.mustLoggedIn'));
         }
 
         if (!$this->credentials->hasAccess($level = $this->level())) {

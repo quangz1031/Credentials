@@ -54,9 +54,12 @@ $router->post('account/login', ['as' => 'account.login.post', 'uses' => 'LoginCo
 $router->get('account/logout', ['as' => 'account.logout', 'uses' => 'LoginController@getLogout']);
 
 // user routes
-$router->resource('users', 'UserController');
-$router->post('users/{users}/suspend', ['as' => 'users.suspend', 'uses' => 'UserController@suspend']);
-$router->post('users/{users}/reset', ['as' => 'users.reset', 'uses' => 'UserController@reset']);
+if (Config::get('credentials.userController', false)) {
+    $router->resource('users', 'UserController');
+    $router->post('users/{users}/suspend', ['as' => 'users.suspend', 'uses' => 'UserController@suspend']);
+    $router->post('users/{users}/reset', ['as' => 'users.reset', 'uses' => 'UserController@reset']);
+}
+
 if (Config::get('credentials.activation')) {
     $router->post('users/{users}/resend', ['as' => 'users.resend', 'uses' => 'UserController@resend']);
 }

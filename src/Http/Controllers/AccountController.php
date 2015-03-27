@@ -97,7 +97,7 @@ class AccountController extends AbstractController
             $user->delete();
         } catch (\Exception $e) {
             return Redirect::to(Config::get('core.home', '/'))
-                ->with('error', 'There was a problem deleting your account.');
+                ->with('error', trans('info.account.deleteError'));
         }
 
         $mail = [
@@ -111,7 +111,7 @@ class AccountController extends AbstractController
         });
 
         return Redirect::to(Config::get('core.home', '/'))
-            ->with('success', 'Your account has been deleted successfully.');
+            ->with('success', trans('info.account.deleteOk'));
     }
 
     /**
@@ -153,7 +153,7 @@ class AccountController extends AbstractController
         }
 
         return Redirect::route('account.profile')
-            ->with('success', 'Your details have been updated successfully.');
+            ->with('success', trans('info.account.detailUpdateOk'));
     }
 
     /**
@@ -190,7 +190,7 @@ class AccountController extends AbstractController
         $user->update($input);
 
         return redirect(Config::get('core.password_changed_redirect_url'))
-            ->with('success', trans('info.passwordChangedOK'));
+            ->with('success', trans('info.account.passwordChangedOK'));
     }
 
     /**

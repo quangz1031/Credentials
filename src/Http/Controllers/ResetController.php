@@ -96,10 +96,10 @@ class ResetController extends AbstractController
             });
 
             return Redirect::route('account.reset')
-                ->with('success', 'Check your email for password reset information.');
+                ->with('success', trans('info.reset.checkEmail'));
         } catch (UserNotFoundException $e) {
             return Redirect::route('account.reset')
-                ->with('error', 'That user does not exist.');
+                ->with('error', trans('info.reset.userNotExist'));
         }
     }
 
@@ -126,7 +126,7 @@ class ResetController extends AbstractController
 
             if (!$user->attemptResetPassword($code, $password)) {
                 return Redirect::to(Config::get('core.home', '/'))
-                    ->with('error', 'There was a problem resetting your password. Please contact support.');
+                    ->with('error', trans('info.reset.resetError'));
             }
 
             $mail = [
@@ -140,10 +140,10 @@ class ResetController extends AbstractController
             });
 
             return Redirect::to(Config::get('core.home', '/'))
-                ->with('success', 'Your password has been changed. Check your email for the new password.');
+                ->with('success', trans('info.reset.resetOk'));
         } catch (UserNotFoundException $e) {
             return Redirect::to(Config::get('core.home', '/'))
-                ->with('error', 'There was a problem resetting your password. Please contact support.');
+                ->with('error', trans('info.reset.resetError'));
         }
     }
 }

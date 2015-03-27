@@ -102,7 +102,7 @@ class RegistrationController extends AbstractController
                 $user->addGroup(Credentials::getGroupProvider()->findByName('Users'));
 
                 return Redirect::to(Config::get('core.home', '/'))
-                    ->with('success', 'Your account has been created successfully.');
+                    ->with('success', trans('info.register.createOk'));
             }
 
             $code = $user->getActivationCode();
@@ -120,10 +120,10 @@ class RegistrationController extends AbstractController
 
             return Redirect::to(Config::get('core.register_redirect_url', '/'))
                 ->with('registeredUser', $user)
-                ->with('success', 'Your account has been created. Check your email for the confirmation link.');
+                ->with('success', trans('info.register.createOkCheckEmail'));
         } catch (UserExistsException $e) {
             return Redirect::route('account.register')->withInput()->withErrors($val->errors())
-                ->with('error', 'That email address is taken.');
+                ->with('error', trans('info.register.emailAlreadyRegistered'));
         }
     }
 }
