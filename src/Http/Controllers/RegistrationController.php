@@ -88,15 +88,8 @@ class RegistrationController extends AbstractController
             $user = Credentials::register($input);
 
             if (!Config::get('credentials.activation')) {
-                $mail = [
-                    'url'     => URL::to(Config::get('core.home', '/')),
-                    'email'   => $user->getLogin(),
-                    'subject' => Config::get('core.name').' - Welcome',
-                ];
 
-                Mail::queue('credentials::emails.welcome', $mail, function ($message) use ($mail) {
-                    $message->to($mail['email'])->subject($mail['subject']);
-                });
+                Credentials::notifyUserRegistered($user);
 
                 $user->attemptActivation($user->getActivationCode());
                 $user->addGroup(Credentials::getGroupProvider()->findByName('Users'));
@@ -105,18 +98,7 @@ class RegistrationController extends AbstractController
                     ->with('success', trans('info.register.createOk'));
             }
 
-            $code = $user->getActivationCode();
-
-            $mail = [
-                'url'     => URL::to(Config::get('core.home', '/')),
-                'link'    => URL::route('account.activate', ['id' => $user->id, 'code' => $code]),
-                'email'   => $user->getLogin(),
-                'subject' => Config::get('core.subject_registered',Config::get('core.name').' - Welcome'),
-            ];
-
-            Mail::queue('credentials::emails.welcome', $mail, function ($message) use ($mail) {
-                $message->to($mail['email'])->subject($mail['subject']);
-            });
+            Credentials::notifyUserRegisteredActivation($user);
 
             return Redirect::to(Config::get('core.register_redirect_url', '/'))
                 ->with('registeredUser', $user)
@@ -126,4 +108,6 @@ class RegistrationController extends AbstractController
                 ->with('error', trans('info.register.emailAlreadyRegistered'));
         }
     }
+
+
 }
