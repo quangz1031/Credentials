@@ -20,6 +20,7 @@ use GrahamCampbell\Binput\Facades\Binput;
 use GrahamCampbell\Credentials\Facades\Credentials;
 use GrahamCampbell\Credentials\Facades\UserRepository;
 use GrahamCampbell\Credentials\Http\Middleware\SentryThrottle;
+use GrahamCampbell\Credentials\Models\User;
 use GrahamCampbell\Throttle\Throttlers\ThrottlerInterface;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
@@ -77,9 +78,11 @@ class LoginController extends AbstractController
      */
     public function postLogin()
     {
+        $loginName = User::getLoginAttributeName();
+
         $remember = Binput::get('rememberMe');
 
-        $input = Binput::only(['email', 'password']);
+        $input = Binput::only([$loginName, 'password']);
 
         $rules = UserRepository::rules(array_keys($input));
         $rules['password'] = 'required|min:6';
@@ -92,7 +95,7 @@ class LoginController extends AbstractController
         $this->throttler->hit();
 
         try {
-            $throttle = Credentials::getThrottleProvider()->findByUserLogin($input['email']);
+            $throttle = Credentials::getThrottleProvider()->findByUserLogin($input[$loginName]);
             $throttle->check();
 
             Credentials::authenticate($input, $remember);
