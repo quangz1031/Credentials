@@ -85,7 +85,7 @@ class LoginController extends AbstractController
         $input = Binput::only([$loginName, 'password']);
 
         $rules = UserRepository::rules(array_keys($input));
-        $rules['password'] = 'required|min:6';
+        $rules['password'] = 'required';
 
         $val = UserRepository::validate($input, $rules, true);
         if ($val->fails()) {
