@@ -17,6 +17,7 @@ use GrahamCampbell\Credentials\Facades\Credentials;
 use GrahamCampbell\Credentials\Facades\UserRepository;
 use GrahamCampbell\Throttle\Throttlers\ThrottlerInterface;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
@@ -85,24 +86,30 @@ class RegistrationController extends AbstractController
         try {
             unset($input['password_confirmation']);
 
-            $user = Credentials::register($input);
+            $registeredUser = DB::transaction(function() use($input) {
+                $user = Credentials::register($input);
 
-            if (!Config::get('credentials.activation')) {
+                if (!Config::get('credentials.activation')) {
 
-                Credentials::notifyUserRegistered($user);
+                    Credentials::notifyUserRegistered($user);
 
-                $user->attemptActivation($user->getActivationCode());
-                $user->addGroup(Credentials::getGroupProvider()->findByName('Users'));
+                    $user->attemptActivation($user->getActivationCode());
+                    $user->addGroup(Credentials::getGroupProvider()->findByName('Users'));
 
-                return Redirect::to(Config::get('core.home', '/'))
-                    ->with('success', trans('info.register.createOk'));
-            }
+                    return Redirect::to(Config::get('core.home', '/'))
+                        ->with('success', trans('info.register.createOk'));
+                }
 
-            Credentials::notifyUserRegisteredActivation($user);
+                Credentials::notifyUserRegisteredActivation($user);
+
+                return $user;
+
+            });
 
             return Redirect::to(Config::get('core.register_redirect_url', '/'))
-                ->with('registeredUser', $user)
+                ->with('registeredUser', $registeredUser)
                 ->with('success', trans('info.register.createOkCheckEmail'));
+
         } catch (UserExistsException $e) {
             return Redirect::route('account.register')->withInput()->withErrors($val->errors())
                 ->with('error', trans('info.register.emailAlreadyRegistered'));
