@@ -125,7 +125,7 @@ class LoginController extends AbstractController
                 ->with('error', trans('validation.login.account_banned'));
         }
 
-        return Redirect::intended(Config::get('core.home', '/'));
+        return Redirect::intended(Config::get('core.login_redirect_url', '/'));
     }
 
     /**
